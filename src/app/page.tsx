@@ -15,10 +15,10 @@ export default function Home() {
     offset: ["start start", "end end"]
   });
 
-  // --- PHASE 1: HERO (0 to 0.2) ---
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.5]);
-  const heroZ = useTransform(scrollYProgress, [0, 0.2], [0, -500]);
+  // --- PHASE 1: HERO (0 to 0.35) ---
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.25, 0.35], [1, 1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.5]);
+  const heroZ = useTransform(scrollYProgress, [0, 0.35], [0, -500]);
 
   // --- THE GLASS (Moves continuously across phases) ---
   // Starts at bottom-left, then shrinks and moves to the top right corner
@@ -37,13 +37,13 @@ export default function Home() {
   const contentY = useTransform(scrollYProgress, [0.3, 0.4], ['50%', '0%']);
   
   // Floating Assets for Phase 3 (no opacity fading, they slide in from outside)
-  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-50vw', '5vw']);
-  const boomboxY = useTransform(scrollYProgress, [0.3, 0.8], ['80%', '20%']);
-  const boomboxRotate = useTransform(scrollYProgress, [0.3, 0.8], [-45, 15]);
+  const boomboxX = useTransform(scrollYProgress, [0.3, 0.7], [-400, 20]); // Slide in from left
+  const boomboxY = useTransform(scrollYProgress, [0.3, 0.7], ['60%', '20%']);
+  const boomboxRotate = useTransform(scrollYProgress, [0.3, 0.7], [-45, 15]);
 
-  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['50vw', '-5vw']);
-  const discoY = useTransform(scrollYProgress, [0.3, 0.8], ['-50%', '10%']);
-  const discoScale = useTransform(scrollYProgress, [0.3, 0.8], [0.5, 1]);
+  const discoX = useTransform(scrollYProgress, [0.3, 0.7], [400, -20]); // Slide in from right
+  const discoY = useTransform(scrollYProgress, [0.3, 0.7], ['-20%', '10%']);
+  const discoScale = useTransform(scrollYProgress, [0.3, 0.7], [0.5, 1]);
 
   return (
     <main className={styles.container}>
@@ -93,20 +93,20 @@ export default function Home() {
                 <h3 className={styles.sectionTitle}>The Plan</h3>
                 <div className={styles.timeline}>
                   <div className={styles.timeSlot}>
-                    <span className={styles.time}>3:30 PM</span>
+                    <span className={styles.time}>10:00 AM</span>
                     <span className={styles.event}>Doors Open & Welcome Drinks</span>
                   </div>
                   <div className={styles.timeSlot}>
-                    <span className={styles.time}>4:30 PM</span>
+                    <span className={styles.time}>11:30 AM</span>
                     <span className={styles.event}>Ice Breakers & Fun Games</span>
                   </div>
                   <div className={styles.timeSlot}>
-                    <span className={styles.time}>6:00 PM</span>
+                    <span className={styles.time}>1:30 PM</span>
                     <span className={styles.event}>Live DJ Set Begins</span>
                   </div>
                   <div className={styles.timeSlot}>
-                    <span className={styles.time}>8:00 PM</span>
-                    <span className={styles.event}>Dinner is Served</span>
+                    <span className={styles.time}>3:30 PM</span>
+                    <span className={styles.event}>Late Lunch / Dinner is Served</span>
                   </div>
                 </div>
               </div>
@@ -136,10 +136,10 @@ export default function Home() {
           {/* SCENE 3: FLOATING ASSETS (Boombox & Disco Ball) rendered LAST so they sit on top */}
           {/* Note: No opacity wrapper here so mix-blend-mode works! */}
           <motion.div className={styles.scene}>
-            <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: 0 }}>
+            <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: '30%' }}>
               <Image src="/boombox.jpg" alt="Retro Boombox" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
             </motion.div>
-            <motion.div className={styles.floatingAsset} style={{ x: discoX, y: discoY, scale: discoScale, right: 0, top: '20%' }}>
+            <motion.div className={styles.floatingAsset} style={{ x: discoX, y: discoY, scale: discoScale, right: 0, top: '60%' }}>
               <Image src="/disco.jpg" alt="Disco Ball" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '50%' }} />
             </motion.div>
           </motion.div>
