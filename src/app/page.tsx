@@ -1,10 +1,12 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import styles from './page.module.css';
 import TicketForm from '../components/TicketForm';
+import Countdown from '../components/Countdown';
+import Marquee from '../components/Marquee';
 
 export default function Home() {
   // We can track the scroll of the whole document
@@ -34,6 +36,9 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* COUNTDOWN SECTION */}
+      <Countdown />
+
       {/* INTRO SECTION (with static floating Boombox) */}
       <motion.section 
         className={styles.introSection}
@@ -58,6 +63,9 @@ export default function Home() {
           </p>
         </div>
       </motion.section>
+
+      {/* MARQUEE BANNER */}
+      <Marquee />
 
       {/* ITINERARY & FAQ SCENE (with static floating Disco ball) */}
       <motion.section 
