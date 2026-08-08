@@ -25,6 +25,7 @@ export default function TicketForm() {
 
   return (
     <form className={styles.formContainer} onSubmit={handleSubmit}>
+      <div className={styles.priceTag}>Price: ₹1000 / Person</div>
       <div className={styles.inputGroup}>
         <label htmlFor="name" className={styles.label}>Your Name</label>
         <input 
@@ -49,7 +50,7 @@ export default function TicketForm() {
         />
       </div>
       <button type="submit" className={styles.submitBtn}>
-        Get Ticket
+        Buy Ticket - ₹1000
       </button>
     </form>
   );

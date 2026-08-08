@@ -13,10 +13,18 @@ export default function Home() {
     offset: ["start start", "end end"]
   });
 
-  // Parallax effects
-  const glassY = useTransform(scrollYProgress, [0, 1], ['0%', '150%']);
-  const glassRotate = useTransform(scrollYProgress, [0, 1], [-15, 15]);
-  const titleY = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
+  // Enhanced 3D Parallax effects
+  // Glass moves significantly and rotates in 3D space
+  const glassY = useTransform(scrollYProgress, [0, 0.5], ['0%', '150%']);
+  const glassRotateX = useTransform(scrollYProgress, [0, 0.5], [0, 45]);
+  const glassRotateY = useTransform(scrollYProgress, [0, 0.5], [-15, 30]);
+  const glassScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.5]);
+  const glassZ = useTransform(scrollYProgress, [0, 0.5], [0, 200]);
+
+  // Title pushes back into the distance
+  const titleY = useTransform(scrollYProgress, [0, 0.5], ['0%', '-80%']);
+  const titleScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.6]);
+  const titleZ = useTransform(scrollYProgress, [0, 0.5], [0, -300]);
   
   const featuresY = useTransform(scrollYProgress, [0, 0.5], ['50%', '0%']);
   const featuresOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
@@ -28,7 +36,7 @@ export default function Home() {
       <section className={styles.hero}>
         <motion.div 
           className={styles.titleGroup}
-          style={{ y: titleY }}
+          style={{ y: titleY, scale: titleScale, z: titleZ }}
         >
           <h1 className={styles.mainTitle}>Freshers'</h1>
           <h2 className={styles.subTitle}>Welcome</h2>
@@ -40,7 +48,7 @@ export default function Home() {
 
         <motion.div 
           className={styles.glassImage}
-          style={{ y: glassY, rotate: glassRotate }}
+          style={{ y: glassY, rotateX: glassRotateX, rotateY: glassRotateY, scale: glassScale, z: glassZ }}
         >
           <Image 
             src="/glass.jpg" 
@@ -74,11 +82,11 @@ export default function Home() {
         <div className={styles.detailsGrid}>
           <div className={styles.detailCard}>
             <span className={styles.detailLabel}>When</span>
-            <span className={styles.detailText}>Saturday, October 24th<br/>4:00 PM Onwards</span>
+            <span className={styles.detailText}>To be revealed soon!</span>
           </div>
           <div className={styles.detailCard}>
             <span className={styles.detailLabel}>Where</span>
-            <span className={styles.detailText}>The Grand Hall<br/>University Campus</span>
+            <span className={styles.detailText}>To be revealed soon!</span>
           </div>
           <div className={styles.detailCard}>
             <span className={styles.detailLabel}>Dress Code</span>
