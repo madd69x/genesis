@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import { Instagram } from 'lucide-react';
 import styles from './page.module.css';
 import TicketForm from '../components/TicketForm';
 
@@ -68,11 +69,37 @@ export default function Home() {
         </motion.ul>
       </section>
 
+      {/* Event Details */}
+      <section className={styles.detailsSection}>
+        <h2 className={styles.detailsTitle}>The Details</h2>
+        <div className={styles.detailsGrid}>
+          <div className={styles.detailCard}>
+            <span className={styles.detailLabel}>When</span>
+            <span className={styles.detailText}>Saturday, October 24th<br/>4:00 PM Onwards</span>
+          </div>
+          <div className={styles.detailCard}>
+            <span className={styles.detailLabel}>Where</span>
+            <span className={styles.detailText}>The Grand Hall<br/>University Campus</span>
+          </div>
+          <div className={styles.detailCard}>
+            <span className={styles.detailLabel}>Dress Code</span>
+            <span className={styles.detailText}>Retro / Pop-Art / Colorful<br/>Dress to impress!</span>
+          </div>
+        </div>
+      </section>
+
       {/* Ticket Booking Section */}
       <section className={styles.ticketSection}>
         <h2 className={styles.ticketTitle}>GET YOUR TICKET</h2>
         <TicketForm />
       </section>
+
+      <footer className={styles.footer}>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.instagramLink}>
+          <Instagram size={32} />
+          <span>@genesis.freshers</span>
+        </a>
+      </footer>
 
     </main>
   );
