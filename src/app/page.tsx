@@ -31,7 +31,13 @@ export default function Home() {
       </div>
 
       {/* HERO SECTION */}
-      <section className={styles.hero}>
+      <motion.section 
+        className={styles.hero}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, margin: "-10%" }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.titleGroup}>
           <h1 className={styles.mainTitle}>Freshers'</h1>
           <h2 className={styles.subTitle}>Welcome</h2>
@@ -40,23 +46,41 @@ export default function Home() {
           <h3 className={styles.genesisTitle}>GENESIS</h3>
           <p className={styles.genesisSub}>THE REAL FUN BEGINS</p>
         </div>
-      </section>
+      </motion.section>
 
       {/* INTRO SECTION (with static floating Boombox) */}
-      <section className={styles.introSection}>
+      <motion.section 
+        className={styles.introSection}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, margin: "-20%" }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.introContent}>
-          <div className={styles.staticBoombox}>
+          <motion.div 
+            className={styles.staticBoombox}
+            initial={{ x: -200, opacity: 0, rotate: -45 }}
+            whileInView={{ x: 0, opacity: 1, rotate: -15 }}
+            transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+            viewport={{ once: false, margin: "-10%" }}
+          >
             <Image src="/boombox.jpg" alt="Retro Boombox" width={200} height={200} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
-          </div>
+          </motion.div>
           <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life!</h2>
           <p className={styles.introText}>
             Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* ITINERARY & FAQ SCENE (with static floating Disco ball) */}
-      <section className={styles.detailsSection}>
+      <motion.section 
+        className={styles.detailsSection}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, margin: "-20%" }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.contentGrid}>
           
           {/* Itinerary */}
@@ -84,9 +108,15 @@ export default function Home() {
 
           {/* FAQ */}
           <div className={styles.sectionBox} style={{ position: 'relative' }}>
-            <div className={styles.staticDisco}>
+            <motion.div 
+              className={styles.staticDisco}
+              initial={{ x: 200, opacity: 0, scale: 0.5, rotate: -45 }}
+              whileInView={{ x: 0, opacity: 1, scale: 1, rotate: 15 }}
+              transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+              viewport={{ once: false, margin: "-10%" }}
+            >
               <Image src="/disco.jpg" alt="Disco Ball" width={200} height={200} style={{ width: '100%', height: 'auto', borderRadius: '50%' }} />
-            </div>
+            </motion.div>
             <h3 className={styles.sectionTitle}>Rules & FAQs</h3>
             <div className={styles.faqList}>
               <div className={styles.faqItem}>
@@ -105,13 +135,19 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* TICKET SECTION (Footer) */}
-      <section className={styles.ticketSection}>
+      <motion.section 
+        className={styles.ticketSection}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, margin: "-20%" }}
+        transition={{ duration: 0.8 }}
+      >
         <h2 className={styles.ticketTitle}>GET YOUR TICKET</h2>
         <TicketForm />
-      </section>
+      </motion.section>
 
       <footer className={styles.footer}>
         <a href="https://www.instagram.com/genesis2026__/" target="_blank" rel="noopener noreferrer" className={styles.instagramLink}>
