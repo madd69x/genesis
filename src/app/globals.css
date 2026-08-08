@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Pacifico&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --color-bg: #fcdca0;
+  --color-red: #e32822;
+  --color-orange: #f27230;
+  --color-yellow: #ffc233;
+  --color-black: #1a1a1a;
+  --color-white: #ffffff;
+  
+  --font-display: 'Anton', sans-serif;
+  --font-script: 'Pacifico', cursive;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  color: var(--color-black);
+  font-family: var(--font-body);
+  /* Halftone pattern background */
+  background-image: radial-gradient(var(--color-orange) 15%, transparent 16%),
+                    radial-gradient(var(--color-orange) 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Subtle overlay to soften the halftone */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(252, 220, 160, 0.7);
+  z-index: -1;
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-red);
+  border-radius: 5px;
+}
