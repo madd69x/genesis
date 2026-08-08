@@ -24,6 +24,7 @@ export default function Home() {
   // Starts at bottom-left, then shrinks and moves to the top right corner
   const glassX = useTransform(scrollYProgress, [0, 0.2, 0.4], ['-20vw', '25vw', '25vw']);
   const glassY = useTransform(scrollYProgress, [0, 0.2, 0.4], ['20vh', '-25vh', '-25vh']);
+  const glassZ = useTransform(scrollYProgress, [0, 1], [-800, -800]); // Push firmly into background
   const glassScale = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 0.4, 0.4]);
   const glassRotate = useTransform(scrollYProgress, [0, 0.2, 1], [-15, 10, 45]);
 
@@ -35,12 +36,12 @@ export default function Home() {
   const contentOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.9, 1], [0, 1, 1, 0]);
   const contentY = useTransform(scrollYProgress, [0.3, 0.4], ['50%', '0%']);
   
-  // Floating Assets for Phase 3
-  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-20vw', '5vw']);
+  // Floating Assets for Phase 3 (no opacity fading, they slide in from outside)
+  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-50vw', '5vw']);
   const boomboxY = useTransform(scrollYProgress, [0.3, 0.8], ['80%', '20%']);
   const boomboxRotate = useTransform(scrollYProgress, [0.3, 0.8], [-45, 15]);
 
-  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['20vw', '-5vw']);
+  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['50vw', '-5vw']);
   const discoY = useTransform(scrollYProgress, [0.3, 0.8], ['-50%', '10%']);
   const discoScale = useTransform(scrollYProgress, [0.3, 0.8], [0.5, 1]);
 
@@ -66,7 +67,7 @@ export default function Home() {
           {/* PERSISTENT 3D ASSET: THE GLASS */}
           <div className={styles.glassContainer}>
             <motion.div 
-              style={{ x: glassX, y: glassY, scale: glassScale, rotate: glassRotate }}
+              style={{ x: glassX, y: glassY, z: glassZ, scale: glassScale, rotate: glassRotate }}
               className={styles.glassImage}
             >
               <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
@@ -133,7 +134,8 @@ export default function Home() {
           </motion.div>
 
           {/* SCENE 3: FLOATING ASSETS (Boombox & Disco Ball) rendered LAST so they sit on top */}
-          <motion.div className={styles.scene} style={{ opacity: contentOpacity }}>
+          {/* Note: No opacity wrapper here so mix-blend-mode works! */}
+          <motion.div className={styles.scene}>
             <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: 0 }}>
               <Image src="/boombox.jpg" alt="Retro Boombox" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
             </motion.div>
