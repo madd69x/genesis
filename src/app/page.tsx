@@ -36,11 +36,11 @@ export default function Home() {
   const contentY = useTransform(scrollYProgress, [0.3, 0.4], ['50%', '0%']);
   
   // Floating Assets for Phase 3
-  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-150%', '5%']);
+  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-20vw', '5vw']);
   const boomboxY = useTransform(scrollYProgress, [0.3, 0.8], ['80%', '20%']);
   const boomboxRotate = useTransform(scrollYProgress, [0.3, 0.8], [-45, 15]);
 
-  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['150%', '-5%']);
+  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['20vw', '-5vw']);
   const discoY = useTransform(scrollYProgress, [0.3, 0.8], ['-50%', '10%']);
   const discoScale = useTransform(scrollYProgress, [0.3, 0.8], [0.5, 1]);
 
@@ -76,24 +76,14 @@ export default function Home() {
           {/* SCENE 2: INTRO */}
           <motion.div className={styles.scene} style={{ opacity: introOpacity, y: introY }}>
             <div className={styles.introContent}>
-              <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life! 🍹💥</h2>
+              <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life!</h2>
               <p className={styles.introText}>
-                Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW. 🥂
+                Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW.
               </p>
             </div>
           </motion.div>
 
-          {/* SCENE 3: FLOATING ASSETS (Boombox & Disco Ball) */}
-          <motion.div className={styles.scene} style={{ opacity: contentOpacity }}>
-            <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: 0 }}>
-              <Image src="/boombox.jpg" alt="Retro Boombox" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
-            </motion.div>
-            <motion.div className={styles.floatingAsset} style={{ x: discoX, y: discoY, scale: discoScale, right: 0, top: '20%' }}>
-              <Image src="/disco.jpg" alt="Disco Ball" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '50%' }} />
-            </motion.div>
-          </motion.div>
-
-          {/* SCENE 4: ITINERARY & FAQ */}
+          {/* SCENE 4: ITINERARY & FAQ (Now rendered before floating assets) */}
           <motion.div className={styles.scene} style={{ opacity: contentOpacity, y: contentY }}>
             <div className={styles.contentGrid}>
               
@@ -107,15 +97,15 @@ export default function Home() {
                   </div>
                   <div className={styles.timeSlot}>
                     <span className={styles.time}>4:30 PM</span>
-                    <span className={styles.event}>Ice Breakers & Fun Games 🎯</span>
+                    <span className={styles.event}>Ice Breakers & Fun Games</span>
                   </div>
                   <div className={styles.timeSlot}>
                     <span className={styles.time}>6:00 PM</span>
-                    <span className={styles.event}>Live DJ Set Begins 🎧</span>
+                    <span className={styles.event}>Live DJ Set Begins</span>
                   </div>
                   <div className={styles.timeSlot}>
                     <span className={styles.time}>8:00 PM</span>
-                    <span className={styles.event}>Dinner is Served 🍕</span>
+                    <span className={styles.event}>Dinner is Served</span>
                   </div>
                 </div>
               </div>
@@ -130,7 +120,7 @@ export default function Home() {
                   </div>
                   <div className={styles.faqItem}>
                     <span className={styles.question}>Is alcohol allowed?</span>
-                    <span className={styles.answer}>Strictly NO alcohol. Only good food and good vibes! ✨</span>
+                    <span className={styles.answer}>Strictly NO alcohol. Only good food and good vibes!</span>
                   </div>
                   <div className={styles.faqItem}>
                     <span className={styles.question}>What is the dress code?</span>
@@ -140,6 +130,16 @@ export default function Home() {
               </div>
 
             </div>
+          </motion.div>
+
+          {/* SCENE 3: FLOATING ASSETS (Boombox & Disco Ball) rendered LAST so they sit on top */}
+          <motion.div className={styles.scene} style={{ opacity: contentOpacity }}>
+            <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: 0 }}>
+              <Image src="/boombox.jpg" alt="Retro Boombox" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
+            </motion.div>
+            <motion.div className={styles.floatingAsset} style={{ x: discoX, y: discoY, scale: discoScale, right: 0, top: '20%' }}>
+              <Image src="/disco.jpg" alt="Disco Ball" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '50%' }} />
+            </motion.div>
           </motion.div>
 
         </div>
