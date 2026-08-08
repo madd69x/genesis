@@ -61,6 +61,14 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Intro Section */}
+      <section className={styles.introSection}>
+        <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life! 🍹💥</h2>
+        <p className={styles.introText}>
+          Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW. 🥂
+        </p>
+      </section>
+
       {/* Info Section */}
       <section className={styles.infoSection}>
         <motion.ul 
@@ -102,13 +110,13 @@ export default function Home() {
       </section>
 
       <footer className={styles.footer}>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.instagramLink}>
+        <a href="https://www.instagram.com/genesis2026__/" target="_blank" rel="noopener noreferrer" className={styles.instagramLink}>
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
           </svg>
-          <span>@genesis.freshers</span>
+          <span>@genesis2026__</span>
         </a>
       </footer>
 
