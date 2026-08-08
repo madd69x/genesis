@@ -15,34 +15,34 @@ export default function Home() {
     offset: ["start start", "end end"]
   });
 
-  // --- PHASE 1: HERO (0 to 0.3) ---
+  // --- PHASE 1: HERO (0 to 0.2) ---
   const heroOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.5]);
   const heroZ = useTransform(scrollYProgress, [0, 0.2], [0, -500]);
 
   // --- THE GLASS (Moves continuously across phases) ---
   // Starts centered, then shrinks and moves to the top right corner
-  const glassX = useTransform(scrollYProgress, [0, 0.3, 0.6], ['0%', '120%', '120%']);
-  const glassY = useTransform(scrollYProgress, [0, 0.3, 0.6], ['0%', '-50%', '-50%']);
-  const glassScale = useTransform(scrollYProgress, [0, 0.3, 0.6], [1, 0.4, 0.4]);
-  const glassRotate = useTransform(scrollYProgress, [0, 0.3, 1], [-15, 10, 45]);
+  const glassX = useTransform(scrollYProgress, [0, 0.2, 0.4], ['0%', '150%', '150%']);
+  const glassY = useTransform(scrollYProgress, [0, 0.2, 0.4], ['0%', '-50%', '-50%']);
+  const glassScale = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 0.4, 0.4]);
+  const glassRotate = useTransform(scrollYProgress, [0, 0.2, 1], [-15, 10, 45]);
 
-  // --- PHASE 2: INTRO (0.2 to 0.5) ---
-  const introOpacity = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], [0, 1, 1, 0]);
-  const introY = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], ['50%', '0%', '0%', '-50%']);
+  // --- PHASE 2: INTRO (0.15 to 0.4) ---
+  const introOpacity = useTransform(scrollYProgress, [0.1, 0.2, 0.3, 0.4], [0, 1, 1, 0]);
+  const introY = useTransform(scrollYProgress, [0.1, 0.2, 0.3, 0.4], ['50%', '0%', '0%', '-50%']);
 
-  // --- PHASE 3: ITINERARY & FAQ (0.4 to 0.9) ---
-  const contentOpacity = useTransform(scrollYProgress, [0.4, 0.5, 0.9, 1], [0, 1, 1, 0]);
-  const contentY = useTransform(scrollYProgress, [0.4, 0.5], ['50%', '0%']);
+  // --- PHASE 3: ITINERARY & FAQ (0.3 to 1.0) ---
+  const contentOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.9, 1], [0, 1, 1, 0]);
+  const contentY = useTransform(scrollYProgress, [0.3, 0.4], ['50%', '0%']);
   
   // Floating Assets for Phase 3
-  const boomboxX = useTransform(scrollYProgress, [0.4, 0.8], ['-100%', '10%']);
-  const boomboxY = useTransform(scrollYProgress, [0.4, 0.8], ['80%', '20%']);
-  const boomboxRotate = useTransform(scrollYProgress, [0.4, 0.8], [-45, 15]);
+  const boomboxX = useTransform(scrollYProgress, [0.3, 0.8], ['-150%', '5%']);
+  const boomboxY = useTransform(scrollYProgress, [0.3, 0.8], ['80%', '20%']);
+  const boomboxRotate = useTransform(scrollYProgress, [0.3, 0.8], [-45, 15]);
 
-  const discoX = useTransform(scrollYProgress, [0.4, 0.8], ['100%', '-10%']);
-  const discoY = useTransform(scrollYProgress, [0.4, 0.8], ['-50%', '10%']);
-  const discoScale = useTransform(scrollYProgress, [0.4, 0.8], [0.5, 1]);
+  const discoX = useTransform(scrollYProgress, [0.3, 0.8], ['150%', '-5%']);
+  const discoY = useTransform(scrollYProgress, [0.3, 0.8], ['-50%', '10%']);
+  const discoScale = useTransform(scrollYProgress, [0.3, 0.8], [0.5, 1]);
 
   return (
     <main className={styles.container}>
@@ -64,12 +64,14 @@ export default function Home() {
           </motion.div>
 
           {/* PERSISTENT 3D ASSET: THE GLASS */}
-          <motion.div 
-            className={styles.glassImage}
-            style={{ x: glassX, y: glassY, scale: glassScale, rotate: glassRotate }}
-          >
-            <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
-          </motion.div>
+          <div className={styles.glassContainer}>
+            <motion.div 
+              style={{ x: glassX, y: glassY, scale: glassScale, rotate: glassRotate }}
+              className={styles.glassImage}
+            >
+              <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
+            </motion.div>
+          </div>
 
           {/* SCENE 2: INTRO */}
           <motion.div className={styles.scene} style={{ opacity: introOpacity, y: introY }}>

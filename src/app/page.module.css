@@ -1,12 +1,11 @@
 .container {
-  background-color: var(--color-bg);
   min-height: 100vh;
   position: relative;
 }
 
 /* Sticky Scroll Architecture */
 .scrollTrack {
-  height: 400vh; /* This determines how long the 3D scroll sequence lasts */
+  height: 300vh; /* This determines how long the 3D scroll sequence lasts */
   position: relative;
 }
 
@@ -84,13 +83,24 @@
 }
 
 /* THE GLASS (Persistent 3D Element) */
-.glassImage {
+.glassContainer {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.glassImage {
   width: 40%;
   max-width: 400px;
   min-width: 250px;
   filter: drop-shadow(10px 10px 0px rgba(0,0,0,0.3));
-  pointer-events: none;
 }
 
 /* FLOATING ASSETS */
