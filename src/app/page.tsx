@@ -10,26 +10,9 @@ export default function Home() {
   // We can track the scroll of the whole document
   const { scrollYProgress } = useScroll();
 
-  // --- THE GLASS (Fixed Background Element) ---
-  // Starts at bottom-left, then shrinks and moves to the top right corner as user scrolls the whole page
-  const glassX = useTransform(scrollYProgress, [0, 1], ['-20vw', '25vw']);
-  const glassY = useTransform(scrollYProgress, [0, 1], ['30vh', '-30vh']);
-  const glassScale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const glassRotate = useTransform(scrollYProgress, [0, 1], [-15, 45]);
-
   return (
     <main className={styles.container}>
       
-      {/* PERSISTENT 3D ASSET: THE GLASS */}
-      <div className={styles.glassContainer}>
-        <motion.div 
-          style={{ x: glassX, y: glassY, scale: glassScale, rotate: glassRotate }}
-          className={styles.glassImage}
-        >
-          <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
-        </motion.div>
-      </div>
-
       {/* HERO SECTION */}
       <motion.section 
         className={styles.hero}
@@ -38,6 +21,9 @@ export default function Home() {
         viewport={{ once: false, margin: "-10%" }}
         transition={{ duration: 0.8 }}
       >
+        <div className={styles.staticGlass}>
+          <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
+        </div>
         <div className={styles.titleGroup}>
           <h1 className={styles.mainTitle}>Freshers'</h1>
           <h2 className={styles.subTitle}>Welcome</h2>
