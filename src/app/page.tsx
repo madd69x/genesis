@@ -8,102 +8,142 @@ import TicketForm from '../components/TicketForm';
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Track scroll across the massive scrollTrack container
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  // Enhanced 3D Parallax effects
-  // Glass moves significantly and rotates in 3D space
-  const glassY = useTransform(scrollYProgress, [0, 0.5], ['0%', '150%']);
-  const glassRotateX = useTransform(scrollYProgress, [0, 0.5], [0, 45]);
-  const glassRotateY = useTransform(scrollYProgress, [0, 0.5], [-15, 30]);
-  const glassScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.5]);
-  const glassZ = useTransform(scrollYProgress, [0, 0.5], [0, 200]);
+  // --- PHASE 1: HERO (0 to 0.3) ---
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.5]);
+  const heroZ = useTransform(scrollYProgress, [0, 0.2], [0, -500]);
 
-  // Title pushes back into the distance
-  const titleY = useTransform(scrollYProgress, [0, 0.5], ['0%', '-80%']);
-  const titleScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.6]);
-  const titleZ = useTransform(scrollYProgress, [0, 0.5], [0, -300]);
+  // --- THE GLASS (Moves continuously across phases) ---
+  // Starts centered, then shrinks and moves to the top right corner
+  const glassX = useTransform(scrollYProgress, [0, 0.3, 0.6], ['0%', '120%', '120%']);
+  const glassY = useTransform(scrollYProgress, [0, 0.3, 0.6], ['0%', '-50%', '-50%']);
+  const glassScale = useTransform(scrollYProgress, [0, 0.3, 0.6], [1, 0.4, 0.4]);
+  const glassRotate = useTransform(scrollYProgress, [0, 0.3, 1], [-15, 10, 45]);
+
+  // --- PHASE 2: INTRO (0.2 to 0.5) ---
+  const introOpacity = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], [0, 1, 1, 0]);
+  const introY = useTransform(scrollYProgress, [0.15, 0.25, 0.4, 0.5], ['50%', '0%', '0%', '-50%']);
+
+  // --- PHASE 3: ITINERARY & FAQ (0.4 to 0.9) ---
+  const contentOpacity = useTransform(scrollYProgress, [0.4, 0.5, 0.9, 1], [0, 1, 1, 0]);
+  const contentY = useTransform(scrollYProgress, [0.4, 0.5], ['50%', '0%']);
   
-  const featuresY = useTransform(scrollYProgress, [0, 0.5], ['50%', '0%']);
-  const featuresOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
+  // Floating Assets for Phase 3
+  const boomboxX = useTransform(scrollYProgress, [0.4, 0.8], ['-100%', '10%']);
+  const boomboxY = useTransform(scrollYProgress, [0.4, 0.8], ['80%', '20%']);
+  const boomboxRotate = useTransform(scrollYProgress, [0.4, 0.8], [-45, 15]);
+
+  const discoX = useTransform(scrollYProgress, [0.4, 0.8], ['100%', '-10%']);
+  const discoY = useTransform(scrollYProgress, [0.4, 0.8], ['-50%', '10%']);
+  const discoScale = useTransform(scrollYProgress, [0.4, 0.8], [0.5, 1]);
 
   return (
-    <main className={styles.container} ref={containerRef}>
+    <main className={styles.container}>
       
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <motion.div 
-          className={styles.titleGroup}
-          style={{ y: titleY, scale: titleScale, z: titleZ }}
-        >
-          <h1 className={styles.mainTitle}>Freshers'</h1>
-          <h2 className={styles.subTitle}>Welcome</h2>
-          <div className={styles.partyWord}>Party</div>
-          <div className={styles.year}>2K26-27</div>
-          <h3 className={styles.genesisTitle}>GENESIS</h3>
-          <p className={styles.genesisSub}>THE REAL FUN BEGINS</p>
-        </motion.div>
+      {/* STICKY SCROLL TRACK */}
+      <div className={styles.scrollTrack} ref={containerRef}>
+        <div className={styles.stickyContainer}>
 
-        <motion.div 
-          className={styles.glassImage}
-          style={{ y: glassY, rotateX: glassRotateX, rotateY: glassRotateY, scale: glassScale, z: glassZ }}
-        >
-          <Image 
-            src="/glass.jpg" 
-            alt="Cocktail Glass" 
-            width={400} 
-            height={400} 
-            priority
-            style={{ width: '100%', height: 'auto', borderRadius: '20px' }}
-          />
-        </motion.div>
-      </section>
+          {/* SCENE 1: HERO */}
+          <motion.div className={styles.scene} style={{ opacity: heroOpacity, scale: heroScale, z: heroZ }}>
+            <div className={styles.titleGroup}>
+              <h1 className={styles.mainTitle}>Freshers'</h1>
+              <h2 className={styles.subTitle}>Welcome</h2>
+              <div className={styles.partyWord}>Party</div>
+              <div className={styles.year}>2K26-27</div>
+              <h3 className={styles.genesisTitle}>GENESIS</h3>
+              <p className={styles.genesisSub}>THE REAL FUN BEGINS</p>
+            </div>
+          </motion.div>
 
-      {/* Intro Section */}
-      <section className={styles.introSection}>
-        <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life! 🍹💥</h2>
-        <p className={styles.introText}>
-          Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW. 🥂
-        </p>
-      </section>
+          {/* PERSISTENT 3D ASSET: THE GLASS */}
+          <motion.div 
+            className={styles.glassImage}
+            style={{ x: glassX, y: glassY, scale: glassScale, rotate: glassRotate }}
+          >
+            <Image src="/glass.jpg" alt="Cocktail Glass" width={400} height={400} priority style={{ width: '100%', height: 'auto', borderRadius: '20px' }} />
+          </motion.div>
 
-      {/* Info Section */}
-      <section className={styles.infoSection}>
-        <motion.ul 
-          className={styles.featuresList}
-          style={{ y: featuresY, opacity: featuresOpacity }}
-        >
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>✨ NEW FRIENDS!</motion.li>
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>🎧 LIVE DJ!!</motion.li>
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>🎯 FUN GAMES!!!</motion.li>
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>📸 PHOTO BOOOTHS!!</motion.li>
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>🍔 GOOOOOD FOOD!!</motion.li>
-          <motion.li className={styles.featureItem} whileHover={{ scale: 1.1, originX: 1 }}>😎 Good vibes ofc..</motion.li>
-        </motion.ul>
-      </section>
+          {/* SCENE 2: INTRO */}
+          <motion.div className={styles.scene} style={{ opacity: introOpacity, y: introY }}>
+            <div className={styles.introContent}>
+              <h2 className={styles.introTitle}>Get ready to pop, drop, and roll into the best years of your life! 🍹💥</h2>
+              <p className={styles.introText}>
+                Welcome to GENESIS — the unofficial Freshers' Welcome Party for the batch of 2K26-27 of MBM University Jodhpur! The real fun begins NOW. 🥂
+              </p>
+            </div>
+          </motion.div>
 
-      {/* Event Details */}
-      <section className={styles.detailsSection}>
-        <h2 className={styles.detailsTitle}>The Details</h2>
-        <div className={styles.detailsGrid}>
-          <div className={styles.detailCard}>
-            <span className={styles.detailLabel}>When</span>
-            <span className={styles.detailText}>To be revealed soon!</span>
-          </div>
-          <div className={styles.detailCard}>
-            <span className={styles.detailLabel}>Where</span>
-            <span className={styles.detailText}>To be revealed soon!</span>
-          </div>
-          <div className={styles.detailCard}>
-            <span className={styles.detailLabel}>Dress Code</span>
-            <span className={styles.detailText}>Retro / Pop-Art / Colorful<br/>Dress to impress!</span>
-          </div>
+          {/* SCENE 3: FLOATING ASSETS (Boombox & Disco Ball) */}
+          <motion.div className={styles.scene} style={{ opacity: contentOpacity }}>
+            <motion.div className={styles.floatingAsset} style={{ x: boomboxX, y: boomboxY, rotate: boomboxRotate, left: 0, top: 0 }}>
+              <Image src="/boombox.jpg" alt="Retro Boombox" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '15px' }} />
+            </motion.div>
+            <motion.div className={styles.floatingAsset} style={{ x: discoX, y: discoY, scale: discoScale, right: 0, top: '20%' }}>
+              <Image src="/disco.jpg" alt="Disco Ball" width={300} height={300} style={{ width: '100%', height: 'auto', borderRadius: '50%' }} />
+            </motion.div>
+          </motion.div>
+
+          {/* SCENE 4: ITINERARY & FAQ */}
+          <motion.div className={styles.scene} style={{ opacity: contentOpacity, y: contentY }}>
+            <div className={styles.contentGrid}>
+              
+              {/* Itinerary */}
+              <div className={styles.sectionBox}>
+                <h3 className={styles.sectionTitle}>The Plan</h3>
+                <div className={styles.timeline}>
+                  <div className={styles.timeSlot}>
+                    <span className={styles.time}>3:30 PM</span>
+                    <span className={styles.event}>Doors Open & Welcome Drinks</span>
+                  </div>
+                  <div className={styles.timeSlot}>
+                    <span className={styles.time}>4:30 PM</span>
+                    <span className={styles.event}>Ice Breakers & Fun Games 🎯</span>
+                  </div>
+                  <div className={styles.timeSlot}>
+                    <span className={styles.time}>6:00 PM</span>
+                    <span className={styles.event}>Live DJ Set Begins 🎧</span>
+                  </div>
+                  <div className={styles.timeSlot}>
+                    <span className={styles.time}>8:00 PM</span>
+                    <span className={styles.event}>Dinner is Served 🍕</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* FAQ */}
+              <div className={styles.sectionBox}>
+                <h3 className={styles.sectionTitle}>Rules & FAQs</h3>
+                <div className={styles.faqList}>
+                  <div className={styles.faqItem}>
+                    <span className={styles.question}>Can Hostelers attend?</span>
+                    <span className={styles.answer}>Yes! The party is in the afternoon, so there are no curfew issues for hostelers.</span>
+                  </div>
+                  <div className={styles.faqItem}>
+                    <span className={styles.question}>Is alcohol allowed?</span>
+                    <span className={styles.answer}>Strictly NO alcohol. Only good food and good vibes! ✨</span>
+                  </div>
+                  <div className={styles.faqItem}>
+                    <span className={styles.question}>What is the dress code?</span>
+                    <span className={styles.answer}>Everything that feels dressed up right. Retro, Pop-Art, or just dress to impress!</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+
         </div>
-      </section>
+      </div>
 
-      {/* Ticket Booking Section */}
+      {/* TICKET SECTION (Normal Scroll Flow) */}
       <section className={styles.ticketSection}>
         <h2 className={styles.ticketTitle}>GET YOUR TICKET</h2>
         <TicketForm />
