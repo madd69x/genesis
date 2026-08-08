@@ -95,7 +95,7 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1;
 }
 
 .glassImage {
@@ -103,6 +103,7 @@
   max-width: 400px;
   min-width: 250px;
   filter: drop-shadow(10px 10px 0px rgba(0,0,0,0.3));
+  mix-blend-mode: multiply;
 }
 
 /* FLOATING ASSETS */
@@ -114,6 +115,7 @@
   filter: drop-shadow(15px 15px 0px rgba(0,0,0,0.4));
   pointer-events: none;
   mix-blend-mode: multiply; /* Removes white background */
+  z-index: 100;
 }
 
 /* INTRO SCENE (Phase 2) */

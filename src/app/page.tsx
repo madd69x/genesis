@@ -21,9 +21,9 @@ export default function Home() {
   const heroZ = useTransform(scrollYProgress, [0, 0.2], [0, -500]);
 
   // --- THE GLASS (Moves continuously across phases) ---
-  // Starts centered, then shrinks and moves to the top right corner
-  const glassX = useTransform(scrollYProgress, [0, 0.2, 0.4], ['0%', '150%', '150%']);
-  const glassY = useTransform(scrollYProgress, [0, 0.2, 0.4], ['0%', '-50%', '-50%']);
+  // Starts at bottom-left, then shrinks and moves to the top right corner
+  const glassX = useTransform(scrollYProgress, [0, 0.2, 0.4], ['-20vw', '25vw', '25vw']);
+  const glassY = useTransform(scrollYProgress, [0, 0.2, 0.4], ['20vh', '-25vh', '-25vh']);
   const glassScale = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 0.4, 0.4]);
   const glassRotate = useTransform(scrollYProgress, [0, 0.2, 1], [-15, 10, 45]);
 
