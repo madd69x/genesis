@@ -92,6 +92,7 @@ export default function AdminDashboard() {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Status</th>
+                <th>UTR / Trans ID</th>
                 <th>Attended</th>
                 <th>Action</th>
               </tr>
@@ -105,6 +106,13 @@ export default function AdminDashboard() {
                     <span className={ticket.paymentStatus === 'Verified' ? styles.badgeGreen : styles.badgeRed}>
                       {ticket.paymentStatus}
                     </span>
+                  </td>
+                  <td>
+                    {ticket.transactionId ? (
+                      <span style={{fontFamily: 'monospace', backgroundColor: '#eee', padding: '0.2rem'}}>{ticket.transactionId}</span>
+                    ) : (
+                      <span style={{color: '#999'}}>-</span>
+                    )}
                   </td>
                   <td>
                     {ticket.attended ? '✅ Yes' : '❌ No'}

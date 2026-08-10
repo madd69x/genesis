@@ -2,7 +2,8 @@
 
 import { use, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
-import { getTicket, TicketData } from '../../../lib/firebase';
+import Image from 'next/image';
+import { getTicket, submitTransactionId, TicketData } from '../../../lib/firebase';
 import styles from './Ticket.module.css';
 
 export default function TicketPage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,6 +13,10 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
   const [ticket, setTicket] = useState<TicketData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPayment, setShowPayment] = useState(false);
+  
+  // UTR submission states
+  const [utr, setUtr] = useState('');
+  const [submittingUtr, setSubmittingUtr] = useState(false);
 
   useEffect(() => {
     async function fetchTicket() {
@@ -21,6 +26,21 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
     }
     fetchTicket();
   }, [ticketId]);
+
+  const handleSubmitUtr = async () => {
+    if (utr.length < 8) {
+      alert("Please enter a valid Transaction ID / UTR");
+      return;
+    }
+    setSubmittingUtr(true);
+    try {
+      await submitTransactionId(ticketId, utr);
+      setTicket(prev => prev ? { ...prev, transactionId: utr } : null);
+    } catch (e) {
+      alert("Failed to submit. Try again.");
+    }
+    setSubmittingUtr(false);
+  };
 
   if (loading) {
     return <div className={styles.container}><h2 style={{color:'white'}}>LOADING PROFILE...</h2></div>;
@@ -86,15 +106,47 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
                   <button className={styles.unlockBtn} onClick={() => setShowPayment(true)}>
                     UNLOCK PASS NOW
                   </button>
+                ) : ticket.transactionId ? (
+                  <div className={styles.paymentInstructions} style={{borderColor: 'var(--color-yellow)'}}>
+                    <h3 style={{fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--color-yellow)'}}>VERIFICATION PENDING</h3>
+                    <p style={{marginTop: '1rem'}}>You submitted UTR: <strong>{ticket.transactionId}</strong></p>
+                    <p style={{fontSize: '0.9rem', marginTop: '1rem'}}>
+                      An organizer is currently verifying your payment. Refresh this page in a few minutes!
+                    </p>
+                  </div>
                 ) : (
                   <div className={styles.paymentInstructions}>
-                    <p style={{fontFamily: 'var(--font-display)', fontSize: '1.2rem'}}>Scan to Pay via UPI</p>
+                    <p style={{fontFamily: 'var(--font-display)', fontSize: '1.2rem'}}>1. Scan to Pay via UPI</p>
                     <div className={styles.qrContainer} style={{ borderColor: 'var(--color-red)', margin: '1rem auto' }}>
                       <QRCode value={upiLink} size={150} />
                     </div>
-                    <p style={{fontSize: '0.9rem'}}>
-                      After paying, show the screenshot to an Organizer to verify your pass!
-                    </p>
+                    
+                    <div className={styles.utrSection}>
+                      <p style={{fontFamily: 'var(--font-display)', fontSize: '1.2rem', marginTop: '1rem'}}>2. Find your Transaction ID (UTR)</p>
+                      
+                      <div style={{ position: 'relative', width: '100%', maxWidth: '300px', height: '200px', margin: '1rem auto', border: '3px solid var(--color-black)' }}>
+                        <Image src="/tutorial.jpg" alt="UPI Tutorial" fill style={{objectFit: 'cover'}} />
+                      </div>
+
+                      <p style={{fontSize: '0.9rem', marginBottom: '1rem'}}>
+                        Look for a 12-digit number (UTR) on your payment receipt.
+                      </p>
+                      
+                      <input 
+                        type="text" 
+                        placeholder="Enter 12-digit UTR"
+                        className={styles.utrInput}
+                        value={utr}
+                        onChange={(e) => setUtr(e.target.value)}
+                      />
+                      <button 
+                        className={styles.submitUtrBtn} 
+                        onClick={handleSubmitUtr}
+                        disabled={submittingUtr}
+                      >
+                        {submittingUtr ? 'SUBMITTING...' : 'SUBMIT PROOF'}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

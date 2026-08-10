@@ -27,6 +27,7 @@ export interface TicketData {
   referralCode: string;
   referredBy?: string;
   referralsCount: number;
+  transactionId?: string;
 }
 
 // Helper: Generate random string
@@ -67,6 +68,14 @@ export async function createTicket(data: Omit<TicketData, 'id' | 'paymentStatus'
   }
 
   return docRef.id;
+}
+
+// Helper: Submit Transaction ID for manual verification
+export async function submitTransactionId(id: string, transactionId: string) {
+  const docRef = doc(db, 'tickets', id);
+  await updateDoc(docRef, {
+    transactionId
+  });
 }
 
 // Helper: Get a ticket by ID
