@@ -2,25 +2,36 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
+import { createTicket } from '../lib/firebase';
 import styles from './TicketForm.module.css';
 
 export default function TicketForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !phone.trim()) return;
 
-    // Generate a unique ticket ID
-    const ticketId = uuidv4();
-
-    // In a real app, we'd save this to a database. 
-    // Here we just pass it via URL to the digital ticket page.
-    const encodedName = encodeURIComponent(name);
-    router.push(`/ticket/${ticketId}?name=${encodedName}`);
+    setLoading(true);
+    try {
+      // Save to Firebase Database
+      const ticketId = await createTicket({
+        name,
+        email,
+        phone
+      });
+      
+      // Redirect to their unique digital pass page to complete payment
+      router.push(`/ticket/${ticketId}`);
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      alert("Failed to create ticket profile. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +50,18 @@ export default function TicketForm() {
         />
       </div>
       <div className={styles.inputGroup}>
+        <label htmlFor="phone" className={styles.label}>Phone Number</label>
+        <input 
+          id="phone"
+          type="tel" 
+          className={styles.input}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          placeholder="e.g. 9876543210"
+        />
+      </div>
+      <div className={styles.inputGroup}>
         <label htmlFor="email" className={styles.label}>Email (Optional)</label>
         <input 
           id="email"
@@ -49,8 +72,8 @@ export default function TicketForm() {
           placeholder="For notifications"
         />
       </div>
-      <button type="submit" className={styles.submitBtn}>
-        Buy Ticket - ₹1000
+      <button type="submit" className={styles.submitBtn} disabled={loading}>
+        {loading ? "CREATING PROFILE..." : "GET PASS - ₹1000"}
       </button>
     </form>
   );
