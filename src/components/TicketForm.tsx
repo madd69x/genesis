@@ -23,17 +23,22 @@ export default function TicketForm() {
 
     setLoading(true);
     try {
-      // Save to Firebase Database
-      const ticketId = await createTicket({
+      const ticketData: any = {
         name,
         email,
         phone,
         age: parseInt(age, 10),
         gender,
         hobbies,
-        partyRequests,
-        referredBy: referredBy.trim() ? referredBy.trim().toUpperCase() : undefined
-      });
+        partyRequests
+      };
+      
+      if (referredBy.trim()) {
+        ticketData.referredBy = referredBy.trim().toUpperCase();
+      }
+
+      // Save to Firebase Database
+      const ticketId = await createTicket(ticketData);
       
       // Redirect to their unique digital pass page to complete payment
       router.push(`/ticket/${ticketId}`);
