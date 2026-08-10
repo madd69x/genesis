@@ -9,6 +9,10 @@ export default function TicketForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [hobbies, setHobbies] = useState('');
+  const [partyRequests, setPartyRequests] = useState('');
   const [referredBy, setReferredBy] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -24,6 +28,10 @@ export default function TicketForm() {
         name,
         email,
         phone,
+        age: parseInt(age, 10),
+        gender,
+        hobbies,
+        partyRequests,
         referredBy: referredBy.trim() ? referredBy.trim().toUpperCase() : undefined
       });
       
@@ -74,6 +82,68 @@ export default function TicketForm() {
           placeholder="For notifications"
         />
       </div>
+
+      <div style={{ width: '100%', height: '4px', backgroundColor: 'var(--color-black)', margin: '1rem 0' }}></div>
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', marginBottom: '1rem' }}>ABOUT YOU</h3>
+
+      <div className={styles.inputGroup}>
+        <label htmlFor="age" className={styles.label}>Age *</label>
+        <input 
+          id="age"
+          type="number" 
+          className={styles.input}
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          placeholder="e.g. 18"
+          required
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label htmlFor="gender" className={styles.label}>Gender *</label>
+        <select 
+          id="gender"
+          className={styles.input}
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          required
+        >
+          <option value="" disabled>Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label htmlFor="hobbies" className={styles.label}>Hobbies & Interests *</label>
+        <input 
+          id="hobbies"
+          type="text" 
+          className={styles.input}
+          value={hobbies}
+          onChange={(e) => setHobbies(e.target.value)}
+          placeholder="Music, Dancing, Gaming..."
+          required
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label htmlFor="partyRequests" className={styles.label}>Party Requests *</label>
+        <textarea 
+          id="partyRequests"
+          className={styles.input}
+          value={partyRequests}
+          onChange={(e) => setPartyRequests(e.target.value)}
+          placeholder="What do you want added? E.g., specific songs, food, games?"
+          required
+          style={{ minHeight: '80px', resize: 'vertical' }}
+        />
+      </div>
+
+      <div style={{ width: '100%', height: '4px', backgroundColor: 'var(--color-black)', margin: '1rem 0' }}></div>
+
       <div className={styles.inputGroup}>
         <label htmlFor="referral" className={styles.label}>Referral Code (Optional)</label>
         <input 

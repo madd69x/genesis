@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import { getAllTickets, verifyPayment, TicketData } from '../../lib/firebase';
 import styles from './Admin.module.css';
 
 export default function AdminDashboard() {
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
   // Simple "security" - in a real app, use proper Auth
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -99,35 +102,59 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {tickets.map(ticket => (
-                <tr key={ticket.id}>
-                  <td style={{fontWeight: 'bold'}}>{ticket.name}</td>
-                  <td>{ticket.phone}</td>
-                  <td>
-                    <span className={ticket.paymentStatus === 'Verified' ? styles.badgeGreen : styles.badgeRed}>
-                      {ticket.paymentStatus}
-                    </span>
-                  </td>
-                  <td>
-                    {ticket.transactionId ? (
-                      <span style={{fontFamily: 'monospace', backgroundColor: '#eee', padding: '0.2rem'}}>{ticket.transactionId}</span>
-                    ) : (
-                      <span style={{color: '#999'}}>-</span>
-                    )}
-                  </td>
-                  <td>
-                    {ticket.attended ? '✅ Yes' : '❌ No'}
-                  </td>
-                  <td>
-                    {ticket.paymentStatus === 'Pending' && (
-                      <button 
-                        className={styles.verifyBtn}
-                        onClick={() => handleVerify(ticket.id!)}
-                      >
-                        Verify Payment
-                      </button>
-                    )}
-                  </td>
-                </tr>
+                <React.Fragment key={ticket.id}>
+                  <tr style={{cursor: 'pointer'}} onClick={() => setExpandedId(expandedId === ticket.id ? null : ticket.id!)}>
+                    <td style={{fontWeight: 'bold', color: 'var(--color-blue)', textDecoration: 'underline'}}>
+                      {ticket.name} {ticket.age ? `(${ticket.age}, ${ticket.gender?.charAt(0)})` : ''} ⬇
+                    </td>
+                    <td>{ticket.phone}</td>
+                    <td>
+                      <span className={ticket.paymentStatus === 'Verified' ? styles.badgeGreen : styles.badgeRed}>
+                        {ticket.paymentStatus}
+                      </span>
+                    </td>
+                    <td>
+                      {ticket.transactionId ? (
+                        <span style={{fontFamily: 'monospace', backgroundColor: '#eee', padding: '0.2rem'}}>{ticket.transactionId}</span>
+                      ) : (
+                        <span style={{color: '#999'}}>-</span>
+                      )}
+                    </td>
+                    <td>
+                      {ticket.attended ? '✅ Yes' : '❌ No'}
+                    </td>
+                    <td>
+                      {ticket.paymentStatus === 'Pending' && (
+                        <button 
+                          className={styles.verifyBtn}
+                          onClick={(e) => { e.stopPropagation(); handleVerify(ticket.id!); }}
+                        >
+                          Verify Payment
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                  {expandedId === ticket.id && (
+                    <tr style={{backgroundColor: '#f9f9f9'}}>
+                      <td colSpan={6} style={{padding: '1rem', border: '2px dashed var(--color-blue)'}}>
+                        <div style={{display: 'flex', gap: '2rem'}}>
+                          <div>
+                            <strong>Hobbies:</strong>
+                            <p>{ticket.hobbies || 'N/A'}</p>
+                          </div>
+                          <div>
+                            <strong>Party Requests:</strong>
+                            <p>{ticket.partyRequests || 'None'}</p>
+                          </div>
+                          <div>
+                            <strong>Referral Code:</strong>
+                            <p>{ticket.referralCode} ({ticket.referralsCount} uses)</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>

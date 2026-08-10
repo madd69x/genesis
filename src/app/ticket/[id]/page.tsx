@@ -67,9 +67,14 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
         <div className={styles.dashboardCard}>
           <h2 className={styles.cardHeader}>Profile Info</h2>
           <div className={styles.cardContent}>
-            <p><strong>Name:</strong> {ticket.name}</p>
+            <p><strong>Name:</strong> {ticket.name} ({ticket.age}, {ticket.gender})</p>
             <p><strong>Phone:</strong> {ticket.phone}</p>
-            <p><strong>Status:</strong> <span style={{ color: isVerified ? '#00cc00' : 'var(--color-red)'}}>{ticket.paymentStatus}</span></p>
+            <p><strong>Status:</strong> <span style={{ color: isVerified ? '#00cc00' : 'var(--color-red)', fontWeight: 'bold'}}>{ticket.paymentStatus}</span></p>
+            
+            <div style={{marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #ccc'}}>
+              <p><strong>Hobbies:</strong> {ticket.hobbies || 'N/A'}</p>
+              <p><strong>Party Requests:</strong> {ticket.partyRequests || 'None'}</p>
+            </div>
           </div>
         </div>
 

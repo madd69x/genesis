@@ -28,6 +28,10 @@ export interface TicketData {
   referredBy?: string;
   referralsCount: number;
   transactionId?: string;
+  age: number;
+  gender: string;
+  hobbies: string;
+  partyRequests: string;
 }
 
 // Helper: Generate random string
