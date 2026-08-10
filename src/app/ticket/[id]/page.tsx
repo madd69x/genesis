@@ -31,11 +31,11 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
 
   const isVerified = ticket.paymentStatus === 'Verified';
 
-  // Real admin verification link for the QR Code
+  // Admin verification link for the QR Code
   const qrValue = `https://genesis.vercel.app/admin/verify/${ticketId}`;
 
-  // Dummy UPI for payment screen
-  const upiLink = `upi://pay?pa=genesis2026@ybl&pn=Genesis%20Party&am=1000&cu=INR&tn=Ticket-${ticketId}`;
+  // Actual UPI link for the payment screen
+  const upiLink = `upi://pay?pa=7878463103@upi&pn=Genesis%20Party&am=1000&cu=INR&tn=Ticket-${ticketId}`;
 
   return (
     <div className={styles.container}>
