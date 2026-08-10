@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import { createTicket } from '../lib/firebase';
 import styles from './TicketForm.module.css';
 
-export default function TicketForm() {
+interface TicketFormProps {
+  userId: string;
+}
+
+export default function TicketForm({ userId }: TicketFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -24,6 +28,7 @@ export default function TicketForm() {
     setLoading(true);
     try {
       const ticketData: any = {
+        userId,
         name,
         email,
         phone,

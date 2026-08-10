@@ -1,16 +1,44 @@
 'use client';
 
-import { useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import styles from './page.module.css';
 import TicketForm from '../components/TicketForm';
+import { auth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '../lib/firebase';
 import Countdown from '../components/Countdown';
 import Marquee from '../components/Marquee';
 
 export default function Home() {
-  // We can track the scroll of the whole document
   const { scrollYProgress } = useScroll();
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    try {
+      if (isLoginMode) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (err: any) {
+      setAuthError(err.message);
+    }
+  };
 
   return (
     <main className={styles.container}>
@@ -131,7 +159,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* TICKET SECTION (Footer) */}
+      {/* TICKET / AUTH SECTION (Footer) */}
       <motion.section 
         className={styles.ticketSection}
         initial={{ opacity: 0 }}
@@ -139,8 +167,30 @@ export default function Home() {
         viewport={{ once: false, margin: "-20%" }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className={styles.ticketTitle}>GET YOUR TICKET</h2>
-        <TicketForm />
+        {authLoading ? (
+          <p style={{textAlign: 'center', color: 'white', fontFamily: 'var(--font-display)'}}>LOADING...</p>
+        ) : !user ? (
+          <div style={{ backgroundColor: 'var(--color-yellow)', padding: '2rem', border: '4px solid black', maxWidth: '500px', margin: '0 auto', boxShadow: '8px 8px 0px black' }}>
+            <h2 className={styles.ticketTitle} style={{ color: 'black' }}>{isLoginMode ? 'LOGIN TO ENTER' : 'CREATE ACCOUNT'}</h2>
+            {authError && <p style={{color: 'red', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center'}}>{authError}</p>}
+            <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Email" style={{ padding: '1rem', border: '3px solid black' }} />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Password" style={{ padding: '1rem', border: '3px solid black' }} />
+              <button type="submit" style={{ padding: '1rem', backgroundColor: 'black', color: 'white', fontFamily: 'var(--font-display)', fontSize: '1.2rem', cursor: 'pointer', border: 'none' }}>{isLoginMode ? 'LOGIN' : 'SIGN UP'}</button>
+            </form>
+            <p style={{ textAlign: 'center', marginTop: '1rem', cursor: 'pointer', textDecoration: 'underline', color: 'black' }} onClick={() => setIsLoginMode(!isLoginMode)}>
+              {isLoginMode ? "Don't have an account? Sign up here." : "Already have an account? Login here."}
+            </p>
+          </div>
+        ) : (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', maxWidth: '500px', margin: '0 auto' }}>
+              <h2 className={styles.ticketTitle} style={{ margin: 0 }}>GET YOUR TICKET</h2>
+              <button onClick={() => signOut(auth)} style={{ padding: '0.5rem 1rem', background: 'var(--color-red)', color: 'white', border: '2px solid black', cursor: 'pointer', fontWeight: 'bold' }}>LOGOUT</button>
+            </div>
+            <TicketForm userId={user.uid} />
+          </div>
+        )}
       </motion.section>
 
       <footer className={styles.footer}>

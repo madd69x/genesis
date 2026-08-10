@@ -3,7 +3,8 @@
 import { use, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import Image from 'next/image';
-import { getTicket, submitTransactionId, TicketData } from '../../../lib/firebase';
+import { useRouter } from 'next/navigation';
+import { getTicket, submitTransactionId, TicketData, auth, onAuthStateChanged, ADMIN_EMAILS } from '../../../lib/firebase';
 import styles from './Ticket.module.css';
 
 export default function TicketPage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,20 +13,31 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
 
   const [ticket, setTicket] = useState<TicketData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
   const [showPayment, setShowPayment] = useState(false);
-  
-  // UTR submission states
   const [utr, setUtr] = useState('');
   const [submittingUtr, setSubmittingUtr] = useState(false);
+  
+  const router = useRouter();
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (authLoading) return;
     async function fetchTicket() {
       const data = await getTicket(ticketId);
       setTicket(data);
       setLoading(false);
     }
     fetchTicket();
-  }, [ticketId]);
+  }, [ticketId, authLoading]);
 
   const handleSubmitUtr = async () => {
     if (utr.length < 8) {
@@ -42,12 +54,24 @@ export default function TicketPage({ params }: { params: Promise<{ id: string }>
     setSubmittingUtr(false);
   };
 
-  if (loading) {
-    return <div className={styles.container}><h2 style={{color:'white'}}>LOADING PROFILE...</h2></div>;
+  if (loading || authLoading) {
+    return <div className={styles.container}><h2 style={{color:'white'}}>LOADING...</h2></div>;
   }
 
   if (!ticket) {
     return <div className={styles.container}><h2 style={{color:'white'}}>PROFILE NOT FOUND</h2></div>;
+  }
+
+  if (!user || (ticket.userId !== user.uid && !ADMIN_EMAILS.includes(user.email))) {
+    return (
+      <div className={styles.container} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <h1 style={{color: 'var(--color-red)', fontFamily: 'var(--font-display)', marginBottom: '1rem'}}>ACCESS DENIED</h1>
+        <p style={{color: 'white', marginBottom: '2rem'}}>You must be logged in as the owner to view this ticket.</p>
+        <button onClick={() => router.push('/')} style={{ padding: '1rem', backgroundColor: 'var(--color-yellow)', border: '4px solid black', fontWeight: 'bold', cursor: 'pointer' }}>
+          GO TO LOGIN
+        </button>
+      </div>
+    );
   }
 
   const isVerified = ticket.paymentStatus === 'Verified';

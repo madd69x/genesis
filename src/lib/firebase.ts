@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, getDocs, query, where, increment } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 // TODO: Replace this with the config provided by the user
 const firebaseConfig = {
@@ -14,10 +15,18 @@ const firebaseConfig = {
 // Initialize Firebase only if it hasn't been initialized already
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+export const ADMIN_EMAILS = [
+  "test@gmail.com", // Add actual admin emails here
+];
+
+export { db, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 
 // Types
 export interface TicketData {
   id?: string;
+  userId: string;
   name: string;
   email: string;
   phone: string;
@@ -115,4 +124,4 @@ export async function getAllTickets() {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TicketData));
 }
 
-export { db };
+// Export removed

@@ -2,17 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { getAllTickets, verifyPayment, TicketData } from '../../lib/firebase';
+import { getAllTickets, verifyPayment, TicketData, auth, onAuthStateChanged, ADMIN_EMAILS, signOut } from '../../lib/firebase';
 import styles from './Admin.module.css';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // Simple "security" - in a real app, use proper Auth
-  const [authenticated, setAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const fetchTickets = async () => {
     setLoading(true);
@@ -23,10 +32,10 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (authenticated) {
+    if (!authLoading && user && ADMIN_EMAILS.includes(user.email)) {
       fetchTickets();
     }
-  }, [authenticated]);
+  }, [authLoading, user]);
 
   const handleVerify = async (id: string, email: string, name: string) => {
     if (confirm("Are you sure you want to verify this payment?")) {
@@ -47,26 +56,22 @@ export default function AdminDashboard() {
     }
   };
 
-  if (!authenticated) {
+  if (authLoading) {
+    return <div style={{padding: '2rem'}}>Loading Authentication...</div>;
+  }
+
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
+
+  if (!isAdmin) {
     return (
-      <div className={styles.loginContainer}>
-        <div className={styles.loginCard}>
-          <h1 className={styles.title}>ORGANIZER LOGIN</h1>
-          <input 
-            type="password" 
-            placeholder="Enter Password" 
-            className={styles.input}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {
-              // Just a dummy password for this demo
-              if (e.key === 'Enter' && password === 'genesisadmin') {
-                setAuthenticated(true);
-              }
-            }}
-          />
-          <p style={{fontSize:'0.8rem', marginTop:'1rem', color:'#666'}}>Password is "genesisadmin"</p>
-        </div>
+      <div style={{padding: '2rem'}}>
+        <h2>Admin Login Required</h2>
+        <p>You must be logged in as an administrator to view this page.</p>
+        {!user ? (
+          <button onClick={() => router.push('/')} style={{padding: '0.5rem', marginTop: '1rem'}}>Go to Login</button>
+        ) : (
+          <button onClick={() => signOut(auth)} style={{padding: '0.5rem', marginTop: '1rem'}}>Sign Out (Logged in as {user.email})</button>
+        )}
       </div>
     );
   }
@@ -78,7 +83,10 @@ export default function AdminDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>GENESIS DASHBOARD</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 className={styles.title}>GENESIS DASHBOARD</h1>
+          <button onClick={() => signOut(auth)} className={styles.refreshBtn}>Sign Out</button>
+        </div>
         <div className={styles.statsRow}>
           <div className={styles.statBox}>
             <span className={styles.statNum}>{totalTickets}</span>
