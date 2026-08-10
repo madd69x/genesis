@@ -9,6 +9,7 @@ export default function TicketForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [referredBy, setReferredBy] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -22,7 +23,8 @@ export default function TicketForm() {
       const ticketId = await createTicket({
         name,
         email,
-        phone
+        phone,
+        referredBy: referredBy.trim() ? referredBy.trim().toUpperCase() : undefined
       });
       
       // Redirect to their unique digital pass page to complete payment
@@ -70,6 +72,18 @@ export default function TicketForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="For notifications"
+        />
+      </div>
+      <div className={styles.inputGroup}>
+        <label htmlFor="referral" className={styles.label}>Referral Code (Optional)</label>
+        <input 
+          id="referral"
+          type="text" 
+          className={styles.input}
+          value={referredBy}
+          onChange={(e) => setReferredBy(e.target.value)}
+          placeholder="Did a friend invite you?"
+          style={{ textTransform: 'uppercase' }}
         />
       </div>
       <button type="submit" className={styles.submitBtn} disabled={loading}>

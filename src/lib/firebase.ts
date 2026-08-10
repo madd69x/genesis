@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, getDocs, query, where, increment } from 'firebase/firestore';
 
 // TODO: Replace this with the config provided by the user
 const firebaseConfig = {
@@ -24,18 +24,48 @@ export interface TicketData {
   paymentStatus: 'Pending' | 'Verified';
   attended: boolean;
   createdAt: number;
+  referralCode: string;
+  referredBy?: string;
+  referralsCount: number;
+}
+
+// Helper: Generate random string
+function generateCode(name: string) {
+  const prefix = name.substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '');
+  const suffix = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}${suffix}`;
 }
 
 // Helper: Create a new ticket
-export async function createTicket(data: Omit<TicketData, 'id' | 'paymentStatus' | 'attended' | 'createdAt'>) {
+export async function createTicket(data: Omit<TicketData, 'id' | 'paymentStatus' | 'attended' | 'createdAt' | 'referralCode' | 'referralsCount'>) {
   const ticketsRef = collection(db, 'tickets');
+  
+  // Create their unique referral code
+  const referralCode = generateCode(data.name);
+
   const newTicket = {
     ...data,
     paymentStatus: 'Pending',
     attended: false,
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    referralCode,
+    referralsCount: 0
   };
+
   const docRef = await addDoc(ticketsRef, newTicket);
+
+  // If they used a referral code, find the owner and increment their count
+  if (data.referredBy) {
+    const q = query(ticketsRef, where("referralCode", "==", data.referredBy));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const referrerDoc = querySnapshot.docs[0];
+      await updateDoc(doc(db, 'tickets', referrerDoc.id), {
+        referralsCount: increment(1)
+      });
+    }
+  }
+
   return docRef.id;
 }
 
