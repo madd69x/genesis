@@ -72,7 +72,7 @@ export default function TicketForm() {
         />
       </div>
       <div className={styles.inputGroup}>
-        <label htmlFor="email" className={styles.label}>Email (Optional)</label>
+        <label htmlFor="email" className={styles.label}>Email *</label>
         <input 
           id="email"
           type="email" 
@@ -80,6 +80,7 @@ export default function TicketForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="For notifications"
+          required
         />
       </div>
 

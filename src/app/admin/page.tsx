@@ -28,11 +28,22 @@ export default function AdminDashboard() {
     }
   }, [authenticated]);
 
-  const handleVerify = async (id: string) => {
-    const confirm = window.confirm('Verify payment for this user?');
-    if (confirm) {
+  const handleVerify = async (id: string, email: string, name: string) => {
+    if (confirm("Are you sure you want to verify this payment?")) {
       await verifyPayment(id);
-      fetchTickets(); // Refresh list
+      
+      // Attempt to send email in the background
+      try {
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name, ticketId: id })
+        });
+      } catch (err) {
+        console.error("Failed to trigger email", err);
+      }
+
+      setTickets(tickets.map(t => t.id === id ? { ...t, paymentStatus: 'Verified' } : t));
     }
   };
 
@@ -127,7 +138,7 @@ export default function AdminDashboard() {
                       {ticket.paymentStatus === 'Pending' && (
                         <button 
                           className={styles.verifyBtn}
-                          onClick={(e) => { e.stopPropagation(); handleVerify(ticket.id!); }}
+                          onClick={(e) => { e.stopPropagation(); handleVerify(ticket.id!, ticket.email, ticket.name); }}
                         >
                           Verify Payment
                         </button>
