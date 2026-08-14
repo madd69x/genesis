@@ -108,7 +108,12 @@ export default function DashboardPage() {
             {isVerified ? (
               <div className={styles.qrWrapper}>
                 <QRCode value={qrUrl} size={200} />
-                <p style={{ marginTop: '1rem', fontWeight: 'bold' }}>Scan at Entrance</p>
+                <p style={{ marginTop: '1rem', fontSize: '1.2rem', fontWeight: 'bold' }}>SCAN TO ENTER</p>
+                <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', wordBreak: 'break-all' }}>
+                  <a href={qrUrl} target="_blank" rel="noreferrer" style={{ color: 'blue', textDecoration: 'underline' }}>
+                    {qrUrl}
+                  </a>
+                </div>
               </div>
             ) : (
               <div className={styles.lockedQr}>
