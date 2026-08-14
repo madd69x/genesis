@@ -222,13 +222,13 @@ export default function DashboardPage() {
               
               <div className={styles.referralStats}>
                 <span>Friends Joined:</span>
-                <span className={styles.statHighlight}>{ticket.referralsCount} / 10</span>
+                <span className={styles.statHighlight}>{ticket.referralsCount || 0} / 10</span>
               </div>
               
               <div className={styles.progressBar}>
                 <div 
                   className={styles.progressFill} 
-                  style={{ width: `${Math.min((ticket.referralsCount / 10) * 100, 100)}%` }}
+                  style={{ width: `${Math.min(((ticket.referralsCount || 0) / 10) * 100, 100)}%` }}
                 ></div>
               </div>
             </div>
