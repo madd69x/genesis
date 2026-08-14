@@ -17,6 +17,7 @@ export default function DashboardPage() {
   
   const [utr, setUtr] = useState('');
   const [submittingUtr, setSubmittingUtr] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
   
   const router = useRouter();
 
@@ -45,6 +46,12 @@ export default function DashboardPage() {
       fetchTicket();
     }
   }, [authLoading, user]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ticket) {
+      setQrUrl(`${window.location.origin}/admin/verify/${ticket.id}`);
+    }
+  }, [ticket]);
 
   const handleSubmitUtr = async () => {
     if (utr.length < 8) {
@@ -89,14 +96,6 @@ export default function DashboardPage() {
   }
 
   const isVerified = ticket.paymentStatus === 'Verified';
-  
-  // Use window.location.origin so the QR code works correctly on any domain (Vercel, localhost, etc)
-  const [qrUrl, setQrUrl] = useState('');
-  useEffect(() => {
-    if (typeof window !== 'undefined' && ticket) {
-      setQrUrl(`${window.location.origin}/admin/verify/${ticket.id}`);
-    }
-  }, [ticket]);
 
   return (
     <div className={styles.container}>
