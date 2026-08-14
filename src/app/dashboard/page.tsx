@@ -5,7 +5,7 @@ import QRCode from 'react-qr-code';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getTicketByUserId, submitTransactionId, TicketData, auth, onAuthStateChanged, signOut } from '../../lib/firebase';
-import styles from '../ticket/[id]/Ticket.module.css';
+import styles from './Dashboard.module.css';
 import TicketForm from '../../components/TicketForm';
 
 export default function DashboardPage() {
@@ -89,13 +89,13 @@ export default function DashboardPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>MY DIGITAL PASS</h1>
-        <button onClick={() => signOut(auth)} className={styles.backBtn} style={{background: 'var(--color-red)', color: 'white'}}>LOGOUT</button>
+        <button onClick={() => signOut(auth)} className={styles.logoutBtn}>LOGOUT</button>
       </div>
 
       <div className={styles.dashboardGrid}>
         
         {/* Left Column: QR & Payment */}
-        <div className={styles.dashboardCard} style={{ backgroundColor: 'var(--color-yellow)' }}>
+        <div className={`${styles.dashboardCard} ${styles.yellowCard}`}>
           <h2 className={styles.cardHeader}>ENTRY QR CODE</h2>
           <div className={styles.qrContainer}>
             {isVerified ? (
@@ -164,11 +164,20 @@ export default function DashboardPage() {
           <div className={styles.dashboardCard}>
             <h2 className={styles.cardHeader}>Profile Info</h2>
             <div className={styles.cardContent}>
-              <p><strong>Name:</strong> {ticket.name} ({ticket.age}, {ticket.gender})</p>
-              <p><strong>Phone:</strong> {ticket.phone}</p>
-              <p><strong>Status:</strong> <span style={{ color: isVerified ? '#00cc00' : 'var(--color-red)', fontWeight: 'bold'}}>{ticket.paymentStatus}</span></p>
+              <div className={styles.profileRow}>
+                <span className={styles.profileLabel}>Name:</span>
+                <span className={styles.profileValue}>{ticket.name} ({ticket.age}, {ticket.gender})</span>
+              </div>
+              <div className={styles.profileRow}>
+                <span className={styles.profileLabel}>Phone:</span>
+                <span className={styles.profileValue}>{ticket.phone}</span>
+              </div>
+              <div className={styles.profileRow}>
+                <span className={styles.profileLabel}>Status:</span>
+                <span className={styles.profileValue} style={{ color: isVerified ? '#00cc00' : 'var(--color-red)' }}>{ticket.paymentStatus}</span>
+              </div>
               
-              <div style={{marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #ccc'}}>
+              <div style={{marginTop: '1rem', paddingTop: '1rem', borderTop: '2px dashed var(--color-black)'}}>
                 <p><strong>Hobbies:</strong> {ticket.hobbies || 'N/A'}</p>
                 <p><strong>Party Requests:</strong> {ticket.partyRequests || 'None'}</p>
               </div>
