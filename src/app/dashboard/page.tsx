@@ -67,6 +67,12 @@ export default function DashboardPage() {
     return <div className={styles.container}><h2 style={{color:'white', fontFamily:'var(--font-display)'}}>LOADING DASHBOARD...</h2></div>;
   }
 
+  // If user is null but authLoading is false, it means we are about to redirect. 
+  // Return null to prevent a render crash while redirecting.
+  if (!user) {
+    return null;
+  }
+
   // If user has no ticket, show the Ticket Registration Form
   if (!ticket) {
     return (
