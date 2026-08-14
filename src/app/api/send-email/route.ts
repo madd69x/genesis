@@ -13,7 +13,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const qrPassUrl = `https://genesis.vercel.app/ticket/${ticketId}`;
+    const url = new URL(req.url);
+    const origin = url.origin;
+    
+    const qrPassUrl = `${origin}/ticket/${ticketId}`;
 
     const data = await resend.emails.send({
       from: 'Genesis Party <onboarding@resend.dev>', // Free tier must use onboarding@resend.dev
