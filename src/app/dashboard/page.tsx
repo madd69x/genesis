@@ -23,7 +23,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
-        router.push('/');
+        window.location.href = '/';
       } else {
         setUser(currentUser);
       }
