@@ -83,7 +83,14 @@ export default function DashboardPage() {
   }
 
   const isVerified = ticket.paymentStatus === 'Verified';
-  const qrUrl = `https://genesis.vercel.app/admin/verify/${ticket.id}`;
+  
+  // Use window.location.origin so the QR code works correctly on any domain (Vercel, localhost, etc)
+  const [qrUrl, setQrUrl] = useState('');
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ticket) {
+      setQrUrl(`${window.location.origin}/admin/verify/${ticket.id}`);
+    }
+  }, [ticket]);
 
   return (
     <div className={styles.container}>
