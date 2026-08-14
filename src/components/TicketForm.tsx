@@ -7,9 +7,10 @@ import styles from './TicketForm.module.css';
 
 interface TicketFormProps {
   userId: string;
+  onSuccess?: () => void;
 }
 
-export default function TicketForm({ userId }: TicketFormProps) {
+export default function TicketForm({ userId, onSuccess }: TicketFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -43,10 +44,15 @@ export default function TicketForm({ userId }: TicketFormProps) {
       }
 
       // Save to Firebase Database
-      const ticketId = await createTicket(ticketData);
+      await createTicket(ticketData);
       
-      // Redirect to their unique digital pass page to complete payment
-      router.push(`/ticket/${ticketId}`);
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        // Fallback for older code if onSuccess isn't provided
+        alert('Ticket Created! Check your dashboard.');
+      }
+      
     } catch (error) {
       console.error("Error creating ticket:", error);
       alert("Failed to create ticket profile. Please try again.");

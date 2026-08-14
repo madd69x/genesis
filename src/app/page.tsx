@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import styles from './page.module.css';
-import TicketForm from '../components/TicketForm';
+import { useRouter } from 'next/navigation';
 import { auth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '../lib/firebase';
 import Countdown from '../components/Countdown';
 import Marquee from '../components/Marquee';
@@ -17,14 +17,19 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setAuthLoading(false);
+      if (currentUser) {
+        router.push('/dashboard');
+      } else {
+        setUser(null);
+        setAuthLoading(false);
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,7 +164,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* TICKET / AUTH SECTION (Footer) */}
+      {/* AUTH SECTION (Footer) */}
       <motion.section 
         className={styles.ticketSection}
         initial={{ opacity: 0 }}
@@ -169,7 +174,7 @@ export default function Home() {
       >
         {authLoading ? (
           <p style={{textAlign: 'center', color: 'white', fontFamily: 'var(--font-display)'}}>LOADING...</p>
-        ) : !user ? (
+        ) : (
           <div style={{ backgroundColor: 'var(--color-yellow)', padding: '2rem', border: '4px solid black', maxWidth: '500px', margin: '0 auto', boxShadow: '8px 8px 0px black' }}>
             <h2 className={styles.ticketTitle} style={{ color: 'black' }}>{isLoginMode ? 'LOGIN TO ENTER' : 'CREATE ACCOUNT'}</h2>
             {authError && <p style={{color: 'red', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center'}}>{authError}</p>}
@@ -181,14 +186,6 @@ export default function Home() {
             <p style={{ textAlign: 'center', marginTop: '1rem', cursor: 'pointer', textDecoration: 'underline', color: 'black' }} onClick={() => setIsLoginMode(!isLoginMode)}>
               {isLoginMode ? "Don't have an account? Sign up here." : "Already have an account? Login here."}
             </p>
-          </div>
-        ) : (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', maxWidth: '500px', margin: '0 auto' }}>
-              <h2 className={styles.ticketTitle} style={{ margin: 0 }}>GET YOUR TICKET</h2>
-              <button onClick={() => signOut(auth)} style={{ padding: '0.5rem 1rem', background: 'var(--color-red)', color: 'white', border: '2px solid black', cursor: 'pointer', fontWeight: 'bold' }}>LOGOUT</button>
-            </div>
-            <TicketForm userId={user.uid} />
           </div>
         )}
       </motion.section>

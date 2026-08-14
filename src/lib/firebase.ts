@@ -101,6 +101,19 @@ export async function getTicket(id: string) {
   return null;
 }
 
+// Helper: Get ticket by User ID
+export async function getTicketByUserId(userId: string) {
+  const ticketsRef = collection(db, 'tickets');
+  const q = query(ticketsRef, where("userId", "==", userId));
+  const snapshot = await getDocs(q);
+  
+  if (!snapshot.empty) {
+    const docSnap = snapshot.docs[0];
+    return { id: docSnap.id, ...docSnap.data() } as TicketData;
+  }
+  return null;
+}
+
 // Helper: Update payment status to Verified
 export async function verifyPayment(id: string) {
   const docRef = doc(db, 'tickets', id);
