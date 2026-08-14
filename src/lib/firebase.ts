@@ -68,18 +68,6 @@ export async function createTicket(data: Omit<TicketData, 'id' | 'paymentStatus'
 
   const docRef = await addDoc(ticketsRef, newTicket);
 
-  // If they used a referral code, find the owner and increment their count
-  if (data.referredBy) {
-    const q = query(ticketsRef, where("referralCode", "==", data.referredBy));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const referrerDoc = querySnapshot.docs[0];
-      await updateDoc(doc(db, 'tickets', referrerDoc.id), {
-        referralsCount: increment(1)
-      });
-    }
-  }
-
   return docRef.id;
 }
 
@@ -117,9 +105,27 @@ export async function getTicketByUserId(userId: string) {
 // Helper: Update payment status to Verified
 export async function verifyPayment(id: string) {
   const docRef = doc(db, 'tickets', id);
-  await updateDoc(docRef, {
-    paymentStatus: 'Verified'
-  });
+  const docSnap = await getDoc(docRef);
+  
+  if (docSnap.exists()) {
+    const ticketData = docSnap.data() as TicketData;
+    
+    // Mark as verified
+    await updateDoc(docRef, { paymentStatus: 'Verified' });
+    
+    // Increment referral ONLY when verified
+    if (ticketData.referredBy) {
+      const ticketsRef = collection(db, 'tickets');
+      const q = query(ticketsRef, where("referralCode", "==", ticketData.referredBy));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const referrerDoc = querySnapshot.docs[0];
+        await updateDoc(doc(db, 'tickets', referrerDoc.id), {
+          referralsCount: increment(1)
+        });
+      }
+    }
+  }
 }
 
 // Helper: Mark as attended
